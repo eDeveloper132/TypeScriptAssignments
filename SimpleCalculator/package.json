@@ -1,15 +1,20 @@
 {
-  "name": "simplecalculator",
+  "name": "@edeveloper132/simplecalculator",
   "version": "1.0.0",
-  "description": "",
+  "description": "simplecalculator in typescript in cli based",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node index.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": "index.js",
   "keywords": [],
-  "author": "",
+  "author": "Mohammad Ilyas",
+  "homepage": "https://github.com/eDeveloper132/TypeScriptAssignments/tree/main/SimpleCalculator",
   "license": "ISC",
   "devDependencies": {
     "@types/chalk": "^2.2.0",
