@@ -129,9 +129,16 @@ const choicer = async () => {
                 ]
             )
             const newedpin = parseInt(newpin.pin);
-            pin = newedpin
-            console.log(chalk.greenBright("Your new PIN:",newedpin,"has been set successfully for authenticate your account!"));
-            choicer();
+            if (newedpin >= 100 && newedpin <= 999) {
+              pin = newedpin
+              console.log(chalk.greenBright("Your new PIN:",newedpin,"has been set successfully for authenticate your account!"));
+              await choicer();
+            } else {
+              console.log(chalk.redBright("Please enter a PIN between 100 and 999!"));
+              await choicer();
+              return;
+            }
+
         }
         else
         {
