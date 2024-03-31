@@ -1,6 +1,6 @@
 {
   "name": "@edeveloper132-ilyas/simplecalculator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "simplecalculator in typescript in cli based",
   "main": "index.js",
   "type": "module",

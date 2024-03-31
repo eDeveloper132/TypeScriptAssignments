@@ -2,6 +2,7 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
 
+const Calculator = async() => {
 const Answers = await inquirer.prompt([
   {
     type: "number",
@@ -22,6 +23,7 @@ const Answers = await inquirer.prompt([
       { name: "Subtract" },
       { name: "Multiply" },
       { name: "Divide" },
+      { name: "Exit" }
     ],
   },
 ]);
@@ -35,17 +37,28 @@ const value2 = Answers.value2;
 switch (operator) {
   case "Add":
     console.log(value1 + value2);
+    await Calculator();
     break;
   case "Subtract":
     console.log(value1 - value2);
+    await Calculator();
     break;
   case "Multiply":
     console.log(value1 * value2);
+    await Calculator();
     break;
   case "Divide":
     console.log(value1 / value2);
+    await Calculator();
     break;
+    case "Exit":
+      console.log(process.exit(0));
+      break;
   default:
     console.log("You selected a wrong operator");
+    await Calculator();
     break;
 }
+}
+await Calculator();
+export default Calculator;
