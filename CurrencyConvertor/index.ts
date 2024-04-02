@@ -260,3 +260,4 @@ const Convertor = async () => {
 };
 
 Convertor();
+export default Convertor;
