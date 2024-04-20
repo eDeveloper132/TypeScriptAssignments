@@ -2,10 +2,9 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
 let pin;
-let balance;
+let balance = 0;
 let NIC;
-const ATM = async () => {
-    console.log(chalk.magentaBright("|||||||||||||||| WELCOME TO OUR BANK'S ATM ||||||||||||||||||||||"));
+const NICHandler = async () => {
     const answer = await inquirer.prompt([
         {
             name: "NIC",
@@ -19,8 +18,14 @@ const ATM = async () => {
     }
     else {
         console.log(chalk.redBright("Please enter a valid 13-digit NIC Number!"));
-        await ATM();
+        await NICHandler();
         return;
+    }
+};
+const ATM = async () => {
+    console.log(chalk.magentaBright("|||||||||||||||| WELCOME TO OUR BANK'S ATM ||||||||||||||||||||||"));
+    if (NIC == null) {
+        await NICHandler();
     }
     const answer1 = await inquirer.prompt([
         {

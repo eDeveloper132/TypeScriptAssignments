@@ -3,31 +3,36 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 
 let pin: number | null;
-let balance: number;
+let balance: number = 0;
 let NIC: number;
-
+const NICHandler = async() =>
+  {
+    const answer = await inquirer.prompt([
+      {
+        name: "NIC",
+        type: "input",
+        message: chalk.whiteBright("Please enter your NIC Number here: "),
+      }
+    ]);
+    let pic = parseInt(answer.NIC);
+    if (answer.NIC.length < 14 && answer.NIC.length > 12) {
+      NIC = pic;
+    }else {
+      console.log(chalk.redBright("Please enter a valid 13-digit NIC Number!"));
+      await NICHandler();
+      return;
+    }
+  }
 const ATM = async () => {
   console.log(
     chalk.magentaBright(
       "|||||||||||||||| WELCOME TO OUR BANK'S ATM ||||||||||||||||||||||"
     )
   );
-
-  const answer = await inquirer.prompt([
-    {
-      name: "NIC",
-      type: "input",
-      message: chalk.whiteBright("Please enter your NIC Number here: "),
-    }
-  ]);
-  let pic = parseInt(answer.NIC);
-  if (answer.NIC.length < 14 && answer.NIC.length > 12) {
-    NIC = pic;
-  }else {
-    console.log(chalk.redBright("Please enter a valid 13-digit NIC Number!"));
-    await ATM();
-    return;
+  if (NIC == null) {
+    await NICHandler();
   }
+  
   const answer1 = await inquirer.prompt([
     {
       name: "pin",
