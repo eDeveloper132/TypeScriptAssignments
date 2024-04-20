@@ -1,21 +1,38 @@
 #!/usr/bin/env node
 import inquirer from "inquirer";
 import chalk from "chalk";
-let pin = null;
-let balance = 0;
+let pin;
+let balance;
+let NIC;
 const ATM = async () => {
     console.log(chalk.magentaBright("|||||||||||||||| WELCOME TO OUR BANK'S ATM ||||||||||||||||||||||"));
     const answer = await inquirer.prompt([
         {
-            name: "pin",
-            type: Number,
-            message: chalk.whiteBright("Please enter your new PIN here: "),
-        },
+            name: "NIC",
+            type: "input",
+            message: chalk.whiteBright("Please enter your NIC Number here: "),
+        }
     ]);
-    const newPin = parseInt(answer.pin);
+    let pic = parseInt(answer.NIC);
+    if (answer.NIC.length < 14 && answer.NIC.length > 12) {
+        NIC = pic;
+    }
+    else {
+        console.log(chalk.redBright("Please enter a valid 13-digit NIC Number!"));
+        await ATM();
+        return;
+    }
+    const answer1 = await inquirer.prompt([
+        {
+            name: "pin",
+            type: "input",
+            message: chalk.whiteBright("Please enter your new PIN here: "),
+        }
+    ]);
+    const newPin = parseInt(answer1.pin);
     if (newPin >= 100 && newPin <= 999) {
         pin = newPin;
-        console.log(chalk.greenBright("Your PIN:", pin, "has been set successfully for authenticate your account!"));
+        console.log(chalk.greenBright("Your PIN:", pin, "has been set successfully to authenticate your account!"));
     }
     else {
         console.log(chalk.redBright("Please enter a PIN between 100 and 999!"));
@@ -65,9 +82,9 @@ const choicer = async () => {
                 const Answer = await inquirer.prompt([
                     {
                         name: "amount",
-                        type: Number,
-                        message: chalk.whiteBright("Write the amount that you want to withdraw: ")
-                    }
+                        type: "number",
+                        message: chalk.whiteBright("Enter the amount you want to withdraw: "),
+                    },
                 ]);
                 const WithdrawAmount = Answer.amount;
                 if (WithdrawAmount <= balance) {
@@ -76,59 +93,119 @@ const choicer = async () => {
                     console.log(chalk.magentaBright("Your total balance is: ", balance));
                     await choicer();
                 }
-                else if (WithdrawAmount >= balance) {
-                    console.log(chalk.redBright("Your balance is", balance, "You are not able to withdraw greater than balance"));
-                    choicer();
+                else {
+                    console.log(chalk.redBright("You do not have sufficient balance for this transaction."));
+                    await choicer();
                 }
             }
             else {
-                console.log(chalk.redBright("You have insufficient balance for withdrawn the required is minimum 100", balance));
+                console.log(chalk.redBright("You have insufficient balance. The minimum balance required is 100."));
                 await choicer();
             }
             break;
         case "CheckBalance":
             console.log(chalk.magentaBright("Your balance is: ", balance));
-            choicer();
+            await choicer();
             break;
         case "ManagePIN":
             const confirmation = await inquirer.prompt([
                 {
                     name: "Guard",
-                    type: Number,
-                    message: "Enter Your Previous PIN: "
-                }
+                    type: "list",
+                    choices: [{ name: "ForgetPin" }, { name: "ChangePin" }],
+                },
             ]);
-            const Guard = parseInt(confirmation.Guard);
-            if (Guard == pin) {
-                const newpin = await inquirer.prompt([
-                    {
-                        name: "pin",
-                        type: Number,
-                        message: "Enter your New PIN: "
+            switch (confirmation.Guard) {
+                case "ChangePin":
+                    if (pin) {
+                        const Guard2 = await inquirer.prompt([
+                            {
+                                name: "pin",
+                                type: "number",
+                                message: "Enter your Previous PIN: ",
+                            },
+                        ]);
+                        const PreviousPin = parseInt(Guard2.pin);
+                        if (PreviousPin === pin) {
+                            const NewPin = await inquirer.prompt([
+                                {
+                                    name: "NewPin",
+                                    type: "number",
+                                    message: "Enter your New PIN: ",
+                                },
+                            ]);
+                            const NewPin1 = parseInt(NewPin.NewPin);
+                            if (NewPin1 >= 100 && NewPin1 <= 999) {
+                                pin = NewPin1;
+                                console.log(chalk.greenBright("Your new PIN:", NewPin1, "has been set successfully to authenticate your account!"));
+                                await choicer();
+                            }
+                            else {
+                                console.log(chalk.redBright("Please enter a PIN between 100 and 999!"));
+                                await choicer();
+                                return;
+                            }
+                        }
+                        else {
+                            console.log(chalk.redBright("You entered the wrong PIN cannot matched with your previous PIN !!!"));
+                            await choicer();
+                            return;
+                        }
                     }
-                ]);
-                const newedpin = parseInt(newpin.pin);
-                if (newedpin >= 100 && newedpin <= 999) {
-                    pin = newedpin;
-                    console.log(chalk.greenBright("Your new PIN:", newedpin, "has been set successfully for authenticate your account!"));
-                    await choicer();
-                }
-                else {
-                    console.log(chalk.redBright("Please enter a PIN between 100 and 999!"));
-                    await choicer();
-                    return;
-                }
-            }
-            else {
-                console.log(chalk.redBright("You entered worng PIN !!!"));
-                choicer();
+                    else {
+                        console.log(chalk.redBright("You entered the wrong PIN!"));
+                        await choicer();
+                    }
+                    break;
+                case "ForgetPin":
+                    const Guard3 = await inquirer.prompt([
+                        {
+                            name: "ForgetPin",
+                            type: "input",
+                            message: "Enter your CNIC Number here: ",
+                        },
+                    ]);
+                    let CNIC = parseInt(Guard3.ForgetPin);
+                    if (Guard3.ForgetPin.length > 12 && Guard3.ForgetPin.length < 14) {
+                        if (CNIC === NIC) {
+                            console.log(chalk.greenBright("Verification successful!"));
+                            const Guard4 = await inquirer.prompt([
+                                {
+                                    name: "pin",
+                                    type: "number",
+                                    message: "Enter your New PIN: ",
+                                },
+                            ]);
+                            const NewPin = parseInt(Guard4.pin);
+                            if (NewPin >= 100 && NewPin <= 999) {
+                                pin = NewPin;
+                                console.log(chalk.greenBright("Your new PIN:", NewPin, "has been set successfully to authenticate your account!"));
+                                await choicer();
+                            }
+                            else {
+                                console.log(chalk.redBright("Please enter a PIN between 100 and 999!"));
+                                await choicer();
+                                return;
+                            }
+                        }
+                        else {
+                            console.log(chalk.redBright("You entered the wrong CNIC Number!"));
+                            await choicer();
+                        }
+                    }
+                    else {
+                        console.log(chalk.redBright("Please enter a valid 13-digit CNIC Number!"));
+                        await choicer();
+                        return;
+                    }
+                    break;
             }
             break;
         case "Exit":
-            process.exit(0);
+            process.exit();
         default:
             console.log(chalk.redBright("Invalid choice"));
-            choicer();
+            await choicer();
     }
 };
 ATM();

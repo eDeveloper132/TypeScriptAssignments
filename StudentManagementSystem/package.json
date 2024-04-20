@@ -1,0 +1,26 @@
+{
+  "name": "@edeveloper132-ilyas/studentmanagementsystem",
+  "version": "1.0.1",
+  "description": "Student Management System ",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eDeveloper132/TypeScriptAssignments/tree/main/StudentManagementSystem"
+  },
+  "author": "Mohammad Ilyas",
+  "license": "MIT",
+  "dependencies": {
+    "@types/inquirer": "^9.0.7",
+    "chalk": "^5.3.0",
+    "inquirer": "^9.2.17"
+  }
+}
